@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 //singletonPattern
 public class Configmanager {
 
-    private String configPath = System.getProperty("user.dir")+""
+    private String configPath = System.getProperty("user.dir")+"src/sample/";
     private List<String> configProperties;
     private List<String> configValues;
 
@@ -36,13 +37,11 @@ public class Configmanager {
 
     public void createConfig(String message){
 
-        if(Files.exists())
+        if(Files.exists(Paths.get(configPath + "config.txt"))){
+            System.out.println("config file already exists");
 
+        }
 
-
-        // capturing and formatting time and date
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
 
         //try block, can write into a text file several times
         try(FileWriter fw = new FileWriter("config.txt", true);
@@ -54,7 +53,7 @@ public class Configmanager {
                 out.println(property);
             }
 
-
+            System.out.println("config file created");
 
         }
         catch(IOException e){
@@ -63,6 +62,5 @@ public class Configmanager {
         }
     }
 
-    public void readConfig
 }
 
