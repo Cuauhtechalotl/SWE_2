@@ -30,7 +30,7 @@ CREATE TABLE picdb.Bild (
 DELIMITER //
 CREATE PROCEDURE picdb.create_photographer (IN vorname VARCHAR(100), IN nachname VARCHAR(50), IN geburtstag DATE, IN notizen TEXT)
 BEGIN
-IF geburtsdatum < curdate() THEN
+IF geburtstag < curdate() THEN
 INSERT INTO Fotografen_innen(Vorname, Nachname, Geburtstag, Notizen) VALUES (vorname, nachname, geburtstag, notizen);
 END IF;
 END //

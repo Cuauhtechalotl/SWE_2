@@ -27,7 +27,7 @@ public class Main extends Application {
         Database picdb = new Database();
         picdb.connect();
 
-        //picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
+        picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
 
 
         Parent root = null;
