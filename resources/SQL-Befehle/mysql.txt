@@ -1,0 +1,28 @@
+DROP DATABASE IF EXISTS picdb;
+DROP USER IF EXISTS picdb_user;
+
+CREATE database picdb;
+CREATE USER picdb_user IDENTIFIED BY 'swe2';
+GRANT ALL PRIVILEGES ON picdb.* TO picdb_user;
+
+CREATE TABLE picdb.Fotografen_innen (
+	Fotografen_ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Vorname varchar(100),
+    Nachname varchar(50) NOT NULL,
+    Geburtstag date,
+    Notizen text
+);
+
+CREATE TABLE picdb.Bild (
+	Bild_ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Dateipfad varchar(255) NOT NULL,
+    Notizen text,
+    ISO varchar(255),
+    Blende varchar(255),
+    Belichtungszeit varchar(255),
+    Ueberschrift varchar(255),
+    Ort varchar(255),
+    Datum varchar(255),
+    Fotografen_ID int,
+    FOREIGN KEY (Fotografen_ID) REFERENCES picdb.Fotografen_innen(Fotografen_ID)
+);
