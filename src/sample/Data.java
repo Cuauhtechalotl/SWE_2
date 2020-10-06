@@ -27,6 +27,12 @@ public class Data {
         loadPhotographers();
     }
 
+    public void editPhotographer(Photographer photographer) {
+        Database swe2 = new Database();
+        swe2.edit_photographer(photographer);
+        loadPhotographers();
+    }
+
     public void deletePhotographer(Photographer photographer) {
         Database swe2 = new Database();
         swe2.delete_photographer(photographer);

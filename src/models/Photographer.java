@@ -32,6 +32,12 @@ public class Photographer {
         return notizen;
     }
 
+    public void setVorname(String input) {vorname = input;}
+
+    public void setNachname(String input) {nachname = input;}
+
+    public void setGeburtsdatum(String input) {geburtsdatum = input;}
+
     public void setNotizen(String notes) {
         notizen = notes;
     }

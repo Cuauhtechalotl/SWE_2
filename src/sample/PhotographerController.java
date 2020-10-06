@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.control.cell.TextFieldTableCell;
 import models.Photographer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,11 +18,11 @@ public class PhotographerController {
     ObservableList<Photographer> data = null;
 
     @FXML TableView table;
-    @FXML TableColumn tID;
-    @FXML TableColumn tVorname;
-    @FXML TableColumn tNachname;
-    @FXML TableColumn tGeburtstag;
-    @FXML TableColumn tNotizen;
+    @FXML TableColumn<Photographer,String> tID;
+    @FXML TableColumn<Photographer,String> tVorname;
+    @FXML TableColumn<Photographer,String> tNachname;
+    @FXML TableColumn<Photographer,String> tGeburtstag;
+    @FXML TableColumn<Photographer,String> tNotizen;
 
     @FXML TextField firstField;
     @FXML TextField surField;
@@ -41,7 +42,18 @@ public class PhotographerController {
         tGeburtstag.setCellValueFactory(new PropertyValueFactory<>("geburtsdatum"));
         tNotizen.setCellValueFactory(new PropertyValueFactory<>("notizen"));
         table.getColumns().setAll(tID, tVorname, tNachname, tGeburtstag, tNotizen);
+        setEditable();
 
+    }
+
+    @FXML public void setEditable() {
+        tVorname.setCellFactory(TextFieldTableCell.forTableColumn());
+        tVorname.setOnEditCommit(edited -> {edited.getRowValue().setVorname(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        tNachname.setCellFactory(TextFieldTableCell.forTableColumn());
+        tNachname.setOnEditCommit(edited -> {edited.getRowValue().setNachname(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        tNotizen.setCellFactory(TextFieldTableCell.forTableColumn());
+        tNotizen.setOnEditCommit(edited -> {edited.getRowValue().setNotizen(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        table.setEditable(true);
     }
 
     @FXML public void deleteEntry(KeyEvent event) {

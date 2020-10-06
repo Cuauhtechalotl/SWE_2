@@ -135,6 +135,16 @@ class Database{
         }
     }
 
+    public void edit_photographer(Photographer photographer) {
+        String query = "CALL edit_photographer("+photographer.getId()+",'"+photographer.getVorname()+"','"+photographer.getNachname()+"','"+
+                                                photographer.getGeburtsdatum()+"','"+photographer.getNotizen()+"');";
+        try {
+            insert(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void delete_photographer(Photographer photographer) {
         String query = "CALL delete_photographer("+photographer.getId()+");";
         try {
