@@ -41,3 +41,11 @@ CREATE PROCEDURE picdb.delete_photographer (IN id INT)
 BEGIN
 DELETE FROM Fotografen_innen WHERE Fotografen_ID = id;
 END //
+
+DELIMITER //
+CREATE PROCEDURE edit_photographer (IN id INT, vorname VARCHAR(100), IN nachname VARCHAR(50), IN geburtstag DATE, IN notizen TEXT)
+BEGIN
+UPDATE Fotografen_innen
+SET Vorname = vorname, Nachname = nachname, Geburtstag = geburtstag, Notizen = notizen
+WHERE Fotografen_Id = id;
+END //

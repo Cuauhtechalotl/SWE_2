@@ -2,13 +2,15 @@ package sample;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollBar;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Scene;
+import models.DataTupel;
+import models.Photographer;
+import models.Picture;
 
 public class Controller {
 
@@ -64,7 +69,7 @@ public class Controller {
         Database picdb = new Database();
         //populating listview
         picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
-
+        loadData(picturePaths.get(0));
         handlePreviewCarousel(0);
 
 //        for(ImageView view : previewList){
@@ -294,4 +299,26 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
+
+    ObservableList<DataTupel> data = null;
+
+    @FXML
+    TableView exifTable;
+    @FXML TableColumn<String,String> tProp;
+    @FXML TableColumn<String,String> tVal;
+
+    @FXML public void loadData(String path) throws SQLException {
+
+        Database picdb = new Database();
+        Picture pic = picdb.getPicture(path);
+        List<DataTupel> exifData = pic.getExifList();
+        data = FXCollections.observableArrayList(exifData);
+        exifTable.setItems(data);
+        tProp.setCellValueFactory(new PropertyValueFactory<>("property"));
+        tVal.setCellValueFactory(new PropertyValueFactory<>("value"));
+        exifTable.getColumns().setAll(tProp, tVal);
+
+    }
+
 }

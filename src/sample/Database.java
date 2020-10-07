@@ -2,6 +2,9 @@ package sample;
 
 
 import models.Photographer;
+import models.Picture;
+import models.EXIF;
+import models.IPTC;
 
 import java.io.File;
 import java.sql.*;
@@ -191,6 +194,28 @@ class Database{
     public void addPicture(String picturePath) throws SQLException {
         insert("INSERT INTO Bild(Bild_ID, Dateipfad, Notizen, ISO, Blende, Belichtungszeit, Ueberschrift, Ort, Datum, Fotografen_ID) values (null,'" + picturePath + "', 'gutes Bild', '800', '0.001', '0.2', 'Überschrift', 'Ort', 'Datum', null);");
         System.out.println("ok");
+    }
+
+    public Picture getPicture(String path) throws SQLException {
+        Picture pic = new Picture();
+        try {
+            ResultSet rs = execute("SELECT * FROM bild WHERE Dateipfad = '" + path + "';");
+            rs.next();
+            int id = rs.getInt("Bild_ID");
+            String notizen = rs.getString("Notizen");
+            String iso = rs.getString("ISO");
+            String blende = rs.getString("Blende");
+            String belichtung = rs.getString("Belichtungszeit");
+            String ueberschrift = rs.getString("Ueberschrift");
+            String ort = rs.getString("Ort");
+            String datum = rs.getString("Datum");
+            EXIF exif = new EXIF(iso, blende, belichtung);
+            IPTC iptc = new IPTC(ueberschrift, ort, datum);
+            pic.loadPicture(id, exif, iptc);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pic;
     }
 
 

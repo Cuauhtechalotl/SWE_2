@@ -1,6 +1,7 @@
 package sample;
 
 import models.Photographer;
+import models.Picture;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.List;
 public class Data {
 
     public List<Photographer> photographers = new ArrayList<Photographer>();
+
     private static Data data = null;
 
     public static Data getData() {

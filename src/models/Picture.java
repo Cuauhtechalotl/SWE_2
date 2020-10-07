@@ -4,12 +4,22 @@ package models;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Picture {
     int id;
     Photographer photographer;
     EXIF exif;
     IPTC iptc;
+    String notizen;
+
+    public void loadPicture(int id, EXIF exif, IPTC iptc) {
+        this.id = id;
+        this.exif = exif;
+        this.iptc = iptc;
+    }
 
     public int getId() {
         return id;
@@ -23,39 +33,12 @@ public class Picture {
         return iptc;
     }
 
-    public class EXIF {
-        String Iso;
-        String Blende;
-        String Belichtung;
-
-        public String getIso(){
-            return Iso;
-        }
-
-        public String getBlende(){
-            return Blende;
-        }
-
-        public String getBelichtung(){
-            return Belichtung;
-        }
+    public List<DataTupel> getExifList() {
+        List<DataTupel> exifData = new ArrayList<>();
+        exifData.add(new DataTupel("ISO",exif.getIso()));
+        exifData.add(new DataTupel("Blende",exif.getBlende()));
+        exifData.add(new DataTupel("Belichtung",exif.getBelichtung()));
+        return exifData;
     }
 
-    public class IPTC {
-        String Ueberschrift;
-        String Ort;
-        String Datum;
-
-        public String getUeberschrift(){
-            return Ueberschrift;
-        }
-
-        public String getOrt(){
-            return Ort;
-        }
-
-        public String getDatum(){
-            return Datum;
-        }
-    }
 }
