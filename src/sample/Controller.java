@@ -61,7 +61,12 @@ public class Controller {
     public void initialize() throws SQLException, FileNotFoundException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
         System.out.println("FXML initialized");
 
-        Database picdb = new Database();
+        Database picdb = null;
+        try {
+            picdb = Database.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //populating listview
         picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
 

@@ -8,14 +8,34 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 class Database{
 
-    private static Database db = null;
+//    private String pathToPictures=/home/ego/IdeaProjects/SWE_2SWE_2/resources/bilder/
+//    private String dbURL=jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin
+//    private String dbDriver=com.mysql.cj.jdbc.Driver
+//    private String user=root
 
-    public static Database getInstance() {
-        if (db == null)
-            db = new Database();
-        return db;
+
+    private static Database firstInstance = null;
+
+    private Database() {}   //constructor has to be empty -> singleton, load data after init
+
+    public static Database getInstance() throws InterruptedException {
+
+        if(firstInstance == null) {
+            synchronized (Database.class) {
+                if (firstInstance == null) {
+
+                    // If the instance isn't needed it isn't created
+                    // This is known as lazy instantiation
+                    firstInstance = new Database();
+
+                }
+            }
+        }
+        // Under either circumstance this returns the instance
+        return firstInstance;
     }
 
 //    public database(String url, String name, String timezone, String driver, String username, String password){
@@ -40,8 +60,14 @@ class Database{
 //        String dbcPassword = "root";
 //
 //    }
-
+//List<String> configValues
     public Connection connect() {
+
+//        this.pathToPictures = configValues.get(0);
+//        this.dbURL = configValues.get(1);
+//        this.dbDriver = configValues.get(2);
+//        this.user = configValues.get(3);
+
 
         try {
             //Connection db = DriverManager.getConnection(url, user, pwd);
