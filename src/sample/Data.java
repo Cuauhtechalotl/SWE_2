@@ -24,7 +24,12 @@ public class Data {
     }
 
     public void addPhotographer(Photographer photographer) {
-        Database swe2 = new Database();
+        Database swe2 = null;
+        try {
+            swe2 = Database.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         swe2.create_photographer(photographer);
         loadPhotographers();
     }
@@ -36,14 +41,24 @@ public class Data {
     }
 
     public void deletePhotographer(Photographer photographer) {
-        Database swe2 = new Database();
+        Database swe2 = null;
+        try {
+            swe2 = Database.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         swe2.delete_photographer(photographer);
     }
 
     public void loadPhotographers() {
 
         photographers = new ArrayList<Photographer>();
-        Database SWE2 = new Database();
+        Database SWE2 = null;
+        try {
+            SWE2 = Database.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         try {
             ResultSet rs = SWE2.execute("SELECT * FROM Fotografen_innen");
             while(rs.next()) {
