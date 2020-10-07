@@ -43,9 +43,17 @@ DELETE FROM Fotografen_innen WHERE Fotografen_ID = id;
 END //
 
 DELIMITER //
-CREATE PROCEDURE edit_photographer (IN id INT, vorname VARCHAR(100), IN nachname VARCHAR(50), IN geburtstag DATE, IN notizen TEXT)
+CREATE PROCEDURE picdb.edit_photographer (IN id INT, vorname VARCHAR(100), IN nachname VARCHAR(50), IN geburtstag DATE, IN notizen TEXT)
 BEGIN
 UPDATE Fotografen_innen
 SET Vorname = vorname, Nachname = nachname, Geburtstag = geburtstag, Notizen = notizen
 WHERE Fotografen_Id = id;
+END //
+
+DELIMITER //
+CREATE PROCEDURE picdb.edit_picture (IN id INT, path VARCHAR(255), notes TEXT, iso VARCHAR(255), blende VARCHAR(255), belichtung VARCHAR(255), ueberschrift VARCHAR(255), ort VARCHAR(255), datum VARCHAR(255), fotograf INT)
+BEGIN
+UPDATE Bild
+SET Dateipfad = path, Notizen = notes, ISO = iso, Blende = blende, Belichtungszeit = belichtung, Ueberschrift = ueberschrift, Ort = ort, Datum = datum, Fotografen_ID = fotograf
+WHERE Bild_Id = id;
 END //

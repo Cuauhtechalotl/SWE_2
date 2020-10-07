@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -59,11 +60,15 @@ public class Controller {
     private ListView<String> listViewIPTC;
 
     private List<String> picturePaths;
+    private Picture pic;
     private int scrollbarValue = 0;
+
+    public ObservableList<DataTupel> exif = null;
+    public ObservableList<DataTupel> iptc = null;
 
 
     @FXML
-    public void initialize() throws SQLException, FileNotFoundException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
+    public void initialize() throws SQLException, FileNotFoundException, InterruptedException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
         System.out.println("FXML initialized");
 
         Database picdb = null;
@@ -305,25 +310,66 @@ public class Controller {
         }
     }
 
+    @FXML TextField notes;
 
-    ObservableList<DataTupel> data = null;
+    @FXML TableView exifTable;
+    @FXML TableView iptcTable;
+    @FXML TableColumn<String,String> eProp;
+    @FXML TableColumn<String,String> eVal;
+    @FXML TableColumn<String,String> iProp;
+    @FXML TableColumn<String,String> iVal;
 
-    @FXML
-    TableView exifTable;
-    @FXML TableColumn<String,String> tProp;
-    @FXML TableColumn<String,String> tVal;
+    @FXML public void loadData(String path) throws SQLException, InterruptedException {
 
-    @FXML public void loadData(String path) throws SQLException {
+        Database picdb = Database.getInstance();
+        Picture picture = picdb.getPicture(path);
+        pic = picture;
 
-        Database picdb = new Database();
-        Picture pic = picdb.getPicture(path);
+        notes.setText(pic.getNotizen());
+
         List<DataTupel> exifData = pic.getExifList();
-        data = FXCollections.observableArrayList(exifData);
-        exifTable.setItems(data);
-        tProp.setCellValueFactory(new PropertyValueFactory<>("property"));
-        tVal.setCellValueFactory(new PropertyValueFactory<>("value"));
-        exifTable.getColumns().setAll(tProp, tVal);
+        exif = FXCollections.observableArrayList(exifData);
+        exifTable.setItems(exif);
+        eProp.setCellValueFactory(new PropertyValueFactory<>("property"));
+        eVal.setCellValueFactory(new PropertyValueFactory<>("value"));
+        exifTable.getColumns().setAll(eProp, eVal);
 
+        List<DataTupel> iptcData = pic.getIptcList();
+        iptc = FXCollections.observableArrayList(iptcData);
+        iptcTable.setItems(iptc);
+        iProp.setCellValueFactory(new PropertyValueFactory<>("property"));
+        iVal.setCellValueFactory(new PropertyValueFactory<>("value"));
+        iptcTable.getColumns().setAll(iProp, iVal);
+
+        eVal.setCellFactory(TextFieldTableCell.forTableColumn());
+        eVal.setOnEditCommit(edited -> {
+            int x = edited.getTablePosition().getRow();
+            switch (x) {
+                case 0 : pic.getExif().setIso(edited.getNewValue()); break;
+                case 1 : pic.getExif().setBlende(edited.getNewValue()); break;
+                case 2 : pic.getExif().setBelichtung(edited.getNewValue()); break;
+            }
+            BL.getBl().editPicture(pic);
+            exif.get(x).setValue(edited.getNewValue());});
+
+        iVal.setCellFactory(TextFieldTableCell.forTableColumn());
+        iVal.setOnEditCommit(edited -> {
+            int x = edited.getTablePosition().getRow();
+            switch (x) {
+                case 0 : pic.getIptc().setUeberschrift(edited.getNewValue()); break;
+                case 1 : pic.getIptc().setOrt(edited.getNewValue()); break;
+                case 2 : pic.getIptc().setDatum(edited.getNewValue()); break;
+            }
+            BL.getBl().editPicture(pic);
+            iptc.get(x).setValue(edited.getNewValue());});
+
+        iptcTable.setEditable(true);
+        exifTable.setEditable(true);
     }
 
+    @FXML public void saveNotes(ActionEvent event) {
+        String note = notes.getText();
+        pic.setNotizen(note);
+        BL.getBl().editPicture(pic);
+    }
 }

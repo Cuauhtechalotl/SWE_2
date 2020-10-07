@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.ObservableList;
+import models.DataTupel;
 import models.Photographer;
 import models.Picture;
 
@@ -8,19 +10,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Data {
+public class BL {
 
     public List<Photographer> photographers = new ArrayList<Photographer>();
 
-    private static Data data = null;
+    private static BL bl = null;
 
-    public static Data getData() {
-        if (data == null)
+    public static BL getBl() {
+        if (bl == null)
         {
-            data = new Data();
-            data.loadPhotographers();
+            bl = new BL();
+            bl.loadPhotographers();
         }
-        return data;
+        return bl;
     }
 
     public void addPhotographer(Photographer photographer) {
@@ -35,7 +37,12 @@ public class Data {
     }
 
     public void editPhotographer(Photographer photographer) {
-        Database swe2 = new Database();
+        Database swe2 = null;
+        try {
+            swe2 = Database.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         swe2.edit_photographer(photographer);
         loadPhotographers();
     }
@@ -81,5 +88,15 @@ public class Data {
         return photographers;
     }
 
+
+    public void editPicture(Picture picture) {
+        Database swe2 = null;
+        try {
+            swe2 = Database.getInstance();
+            swe2.edit_picture(picture);
+        } catch (InterruptedException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

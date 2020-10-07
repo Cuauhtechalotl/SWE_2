@@ -7,9 +7,10 @@ public class Photographer {
     String geburtsdatum;
     String notizen;
 
-    public int getId()
+    public String getId()
     {
-        return id;
+        if (id == 0) {String x = ""; return x;};
+        return String.valueOf(id);
     }
 
     public String getVorname()

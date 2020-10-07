@@ -22,4 +22,16 @@ public class IPTC {
     public String getDatum(){
         return Datum;
     }
+
+    public void setDatum(String datum) {
+        Datum = datum;
+    }
+
+    public void setOrt(String ort) {
+        Ort = ort;
+    }
+
+    public void setUeberschrift(String ueberschrift) {
+        Ueberschrift = ueberschrift;
+    }
 }

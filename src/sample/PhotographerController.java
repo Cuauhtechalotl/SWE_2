@@ -34,7 +34,7 @@ public class PhotographerController {
     }
 
     @FXML public void loadData() {
-        data = FXCollections.observableArrayList(Data.getData().getPhotographers());
+        data = FXCollections.observableArrayList(BL.getBl().getPhotographers());
         table.setItems(data);
         tID.setCellValueFactory(new PropertyValueFactory<>("id"));
         tVorname.setCellValueFactory(new PropertyValueFactory<>("vorname"));
@@ -48,11 +48,11 @@ public class PhotographerController {
 
     @FXML public void setEditable() {
         tVorname.setCellFactory(TextFieldTableCell.forTableColumn());
-        tVorname.setOnEditCommit(edited -> {edited.getRowValue().setVorname(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        tVorname.setOnEditCommit(edited -> {edited.getRowValue().setVorname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
         tNachname.setCellFactory(TextFieldTableCell.forTableColumn());
-        tNachname.setOnEditCommit(edited -> {edited.getRowValue().setNachname(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        tNachname.setOnEditCommit(edited -> {edited.getRowValue().setNachname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
         tNotizen.setCellFactory(TextFieldTableCell.forTableColumn());
-        tNotizen.setOnEditCommit(edited -> {edited.getRowValue().setNotizen(edited.getNewValue()); Data.getData().editPhotographer(edited.getRowValue());});
+        tNotizen.setOnEditCommit(edited -> {edited.getRowValue().setNotizen(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
         table.setEditable(true);
     }
 
@@ -60,9 +60,9 @@ public class PhotographerController {
         if (event.getCode().equals(KeyCode.DELETE) && table.getSelectionModel().getSelectedItem() != null)
         {
             int i = table.getSelectionModel().getSelectedIndex();
-            Data.getData().deletePhotographer(data.get(i));
+            BL.getBl().deletePhotographer(data.get(i));
             data.remove(i);
-            Data.getData().loadPhotographers();
+            BL.getBl().loadPhotographers();
             loadData();
         }
     }
@@ -72,7 +72,7 @@ public class PhotographerController {
         String nachname = surField.getText();
         String geburtstag = birthField.getText();
         String notizen = noteField.getText();
-        Data.getData().addPhotographer(new Photographer(vorname, nachname, geburtstag, notizen));
+        BL.getBl().addPhotographer(new Photographer(vorname, nachname, geburtstag, notizen));
         loadData();
     }
 

@@ -222,12 +222,13 @@ class Database{
         System.out.println("ok");
     }
 
-    public Picture getPicture(String path) throws SQLException {
+    public Picture getPicture(String paths) throws SQLException {
         Picture pic = new Picture();
         try {
-            ResultSet rs = execute("SELECT * FROM bild WHERE Dateipfad = '" + path + "';");
+            ResultSet rs = execute("SELECT * FROM bild WHERE Dateipfad = '" + paths + "';");
             rs.next();
             int id = rs.getInt("Bild_ID");
+            String path = rs.getString("Dateipfad");
             String notizen = rs.getString("Notizen");
             String iso = rs.getString("ISO");
             String blende = rs.getString("Blende");
@@ -235,9 +236,10 @@ class Database{
             String ueberschrift = rs.getString("Ueberschrift");
             String ort = rs.getString("Ort");
             String datum = rs.getString("Datum");
+            int photograph = rs.getInt("Fotografen_ID");
             EXIF exif = new EXIF(iso, blende, belichtung);
             IPTC iptc = new IPTC(ueberschrift, ort, datum);
-            pic.loadPicture(id, exif, iptc);
+            pic.loadPicture(id, path, notizen, exif, iptc);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -262,5 +264,30 @@ class Database{
                 }
             }
         }
+    }
+
+    public void edit_picture(Picture picture) throws InterruptedException, SQLException {
+
+        PreparedStatement addPicture = Database.getInstance().connect().prepareStatement("CALL edit_picture(?,?,?,?,?,?,?,?,?,?)");
+        addPicture.setString(1,picture.getId());
+        addPicture.setString(2,picture.getPath());
+        addPicture.setString(3,picture.getNotizen());
+        addPicture.setString(4,picture.getExif().getIso());
+        addPicture.setString(5,picture.getExif().getBlende());
+        addPicture.setString(6,picture.getExif().getBelichtung());
+        addPicture.setString(7,picture.getIptc().getUeberschrift());
+        addPicture.setString(8,picture.getIptc().getOrt());
+        addPicture.setString(9,picture.getIptc().getDatum());
+        if(picture.getPhotographer() == null)
+        {
+            addPicture.setString(10,null);
+        }
+        else
+        {
+        addPicture.setString(10,picture.getPhotographer().getId());
+        }
+
+        System.out.println(addPicture.toString());
+        addPicture.execute();
     }
 }
