@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.InvalidationListener;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.cell.TextFieldTableCell;
 import models.Photographer;
 import javafx.collections.FXCollections;
@@ -12,29 +14,43 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import models.PhotographerPM;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PhotographerController {
 
-    ObservableList<Photographer> data = null;
+    List<PhotographerPM> photographers = new ArrayList<>();
+    private ObservableList<PhotographerPM> data;
 
     @FXML TableView table;
-    @FXML TableColumn<Photographer,String> tID;
-    @FXML TableColumn<Photographer,String> tVorname;
-    @FXML TableColumn<Photographer,String> tNachname;
-    @FXML TableColumn<Photographer,String> tGeburtstag;
-    @FXML TableColumn<Photographer,String> tNotizen;
+    @FXML TableColumn<PhotographerPM,String> tID;
+    @FXML TableColumn<PhotographerPM,String> tVorname;
+    @FXML TableColumn<PhotographerPM,String> tNachname;
+    @FXML TableColumn<PhotographerPM,String> tGeburtstag;
+    @FXML TableColumn<PhotographerPM,String> tNotizen;
 
     @FXML TextField firstField;
     @FXML TextField surField;
     @FXML TextField birthField;
     @FXML TextField noteField;
 
+// model ->pm: List<PicturePM> pms = List<Picture>
+//                                  .stream()
+//                                  .map(i -> new PicturePM(i))
+//                                  .collect(Collectors.toList())
+// dann GUI: Liste.setItems(FXCollections.observableArrayList(pms)
+
     @FXML public void loadDataHandler(ActionEvent event) {
         loadData();
     }
 
+
     @FXML public void loadData() {
-        data = FXCollections.observableArrayList(BL.getBl().getPhotographers());
+        List<Photographer> list = BL.getBl().getPhotographers();
+        photographers = list.stream().map(i -> new PhotographerPM(i)).collect(Collectors.toList());
+        data = FXCollections.observableArrayList(photographers);
         table.setItems(data);
         tID.setCellValueFactory(new PropertyValueFactory<>("id"));
         tVorname.setCellValueFactory(new PropertyValueFactory<>("vorname"));
@@ -48,11 +64,11 @@ public class PhotographerController {
 
     @FXML public void setEditable() {
         tVorname.setCellFactory(TextFieldTableCell.forTableColumn());
-        tVorname.setOnEditCommit(edited -> {edited.getRowValue().setVorname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
+        tVorname.setOnEditCommit(edited -> {edited.getRowValue().setVorname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue().getPhotographer());});
         tNachname.setCellFactory(TextFieldTableCell.forTableColumn());
-        tNachname.setOnEditCommit(edited -> {edited.getRowValue().setNachname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
+        tNachname.setOnEditCommit(edited -> {edited.getRowValue().setNachname(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue().getPhotographer());});
         tNotizen.setCellFactory(TextFieldTableCell.forTableColumn());
-        tNotizen.setOnEditCommit(edited -> {edited.getRowValue().setNotizen(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue());});
+        tNotizen.setOnEditCommit(edited -> {edited.getRowValue().setNotizen(edited.getNewValue()); BL.getBl().editPhotographer(edited.getRowValue().getPhotographer());});
         table.setEditable(true);
     }
 
@@ -60,9 +76,8 @@ public class PhotographerController {
         if (event.getCode().equals(KeyCode.DELETE) && table.getSelectionModel().getSelectedItem() != null)
         {
             int i = table.getSelectionModel().getSelectedIndex();
-            BL.getBl().deletePhotographer(data.get(i));
+            BL.getBl().deletePhotographer(data.get(i).getPhotographer());
             data.remove(i);
-            BL.getBl().loadPhotographers();
             loadData();
         }
     }

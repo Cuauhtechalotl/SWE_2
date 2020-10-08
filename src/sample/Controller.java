@@ -21,10 +21,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Scene;
 import models.DataTupel;
 import models.Picture;
+import models.PicturePM;
 
 public class Controller {
 
@@ -44,7 +46,7 @@ public class Controller {
     };
 
     @FXML
-    Image previewImage1,previewImage2,previewImage3,previewImage5,previewImage6;
+    Image previewImage1,previewImage2,previewImage3,previewImage4, previewImage5,previewImage6;
 
     @FXML
     private ScrollBar scrollbar;
@@ -56,8 +58,9 @@ public class Controller {
     @FXML
     private ListView<String> listViewIPTC;
 
+    private List<PicturePM> pictures;
     private List<String> picturePaths;
-    private Picture pic;
+    private PicturePM pic;
     private int scrollbarValue = 0;
 
     public ObservableList<DataTupel> exif = null;
@@ -76,7 +79,6 @@ public class Controller {
         }
         //populating listview
         picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
-        loadData(picturePaths.get(0));
         handlePreviewCarousel(0);
 
 //        for(ImageView view : previewList){
@@ -264,29 +266,46 @@ public class Controller {
     private void handlePreviewCarousel(int index) throws FileNotFoundException {
 
 //        System.out.println("previewCarousel index " + index);
-        Image img1 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(0+index).substring(1)));
-        Image img2 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(1+index).substring(1)));
-        Image img3 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(2+index).substring(1)));
-        Image img4 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(3+index).substring(1)));
-        Image img5 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(4+index).substring(1)));
-        Image img6 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(5+index).substring(1)));
+        Image[] images = new Image[6];
+        for(int i=0;i<=5;i++) {
+            images[i] = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(i+index).substring(1)));
+        }
+        preview1.setImage(images[0]);
+        preview2.setImage(images[1]);
+        preview3.setImage(images[2]);
+        preview4.setImage(images[3]);
+        preview5.setImage(images[4]);
+        preview6.setImage(images[5]);
+
+        cachePhotos(index);
+
 //        System.out.println("firstindex:" + 1+index);
 //        System.out.println("lastindex:" + index+5);
-        preview1.setImage(img1);
-        preview2.setImage(img2);
-        preview3.setImage(img3);
-        preview4.setImage(img4);
-        preview5.setImage(img5);
-        preview6.setImage(img6);
+    }
 
+    private void cachePhotos(int index) {
+        pictures = new ArrayList<>();
+        for(int i=0;i<=6;i++) {
+            String path = "."+picturePaths.get(i + index).substring(1);
+            System.out.println(path);
+            pictures.add(new PicturePM(BL.getBl().getPicture(path)));
+        }
     }
 
     private void setPreviewImage(int index) throws FileNotFoundException {
 
         Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
         picture.setImage(img);
-
+        pic = pictures.get(index);
+        try {
+            loadData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+    }
 
     public void pressButton(ActionEvent event){
 //        Image image = new Image(getClass().getResourceAsStream("file:/home/ego/IdeaProjects/SWE2/resources/bilder/test2.jpg"));
@@ -316,11 +335,7 @@ public class Controller {
     @FXML TableColumn<String,String> iProp;
     @FXML TableColumn<String,String> iVal;
 
-    @FXML public void loadData(String path) throws SQLException, InterruptedException {
-
-        DALDatabase picdb = DALDatabase.getInstance();
-        Picture picture = picdb.getPicture(path);
-        pic = picture;
+    @FXML public void loadData() throws SQLException, InterruptedException {
 
         notes.setText(pic.getNotizen());
 
@@ -346,7 +361,7 @@ public class Controller {
                 case 1 : pic.getExif().setBlende(edited.getNewValue()); break;
                 case 2 : pic.getExif().setBelichtung(edited.getNewValue()); break;
             }
-            BL.getBl().editPicture(pic);
+            BL.getBl().editPicture(pic.getPicture());
             exif.get(x).setValue(edited.getNewValue());});
 
         iVal.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -357,7 +372,7 @@ public class Controller {
                 case 1 : pic.getIptc().setOrt(edited.getNewValue()); break;
                 case 2 : pic.getIptc().setDatum(edited.getNewValue()); break;
             }
-            BL.getBl().editPicture(pic);
+            BL.getBl().editPicture(pic.getPicture());
             iptc.get(x).setValue(edited.getNewValue());});
 
         iptcTable.setEditable(true);
@@ -367,12 +382,6 @@ public class Controller {
     @FXML public void saveNotes(ActionEvent event) {
         String note = notes.getText();
         pic.setNotizen(note);
-        BL.getBl().editPicture(pic);
+        BL.getBl().editPicture(pic.getPicture());
     }
 }
-
-// model ->pm: List<PicturePM> pms = List<Picture>
-//                                  .stream()
-//                                  .map(i -> new PicturePM(i))
-//                                  .collect(Collectors.toList())
-// dann GUI: Liste.setItems(FXCollections.observableArrayList(pms)

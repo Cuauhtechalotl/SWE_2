@@ -22,7 +22,6 @@ class BLTest {
     void allPhotographersLoaded() {
         DALFactory.useMock();
         BL bl = new BL();
-        bl.loadPhotographers();
         assertEquals(bl.getPhotographers().size(),1);
     }
 
@@ -30,7 +29,6 @@ class BLTest {
     void CorrectPhotographersLoaded() {
         DALFactory.useMock();
         BL bl = new BL();
-        bl.loadPhotographers();
         assertEquals(bl.getPhotographers().get(0).getNachname(),"Mustermann");
     }
 

@@ -189,8 +189,8 @@ class DALDatabase implements DAL{
         }
     }
 
-    public ArrayList<Photographer> load_photographers() {
-        ArrayList<Photographer> photographers = new ArrayList<Photographer>();
+    public List<Photographer> load_photographers() {
+        List<Photographer> photographers = new ArrayList<Photographer>();
         try {
             ResultSet rs = execute("SELECT * FROM Fotografen_innen");
             while (rs.next()) {
@@ -201,7 +201,6 @@ class DALDatabase implements DAL{
                 String notizen = rs.getString("Notizen");
                 Photographer photographer = new Photographer(id, vorname, nachname, geburtstag, notizen);
                 photographers.add(photographer);
-                return photographers;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -243,12 +242,16 @@ class DALDatabase implements DAL{
 //    }
 
 
-    public void addPicture(String picturePath) throws SQLException {
-        insert("INSERT INTO Bild(Bild_ID, Dateipfad, Notizen, ISO, Blende, Belichtungszeit, Ueberschrift, Ort, Datum, Fotografen_ID) values (null,'" + picturePath + "', 'gutes Bild', '800', '0.001', '0.2', 'Überschrift', 'Ort', 'Datum', null);");
+    public void add_picture(String picturePath){
+        try {
+            insert("INSERT INTO Bild(Bild_ID, Dateipfad, Notizen, ISO, Blende, Belichtungszeit, Ueberschrift, Ort, Datum, Fotografen_ID) values (null,'" + picturePath + "', 'gutes Bild', '800', '0.001', '0.2', 'Überschrift', 'Ort', 'Datum', null);");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         System.out.println("ok");
     }
 
-    public Picture getPicture(String paths) throws SQLException {
+    public Picture get_picture(String paths) {
         Picture pic = new Picture();
         try {
             ResultSet rs = execute("SELECT * FROM bild WHERE Dateipfad = '" + paths + "';");
@@ -283,7 +286,7 @@ class DALDatabase implements DAL{
             if(listofFiles[i].isFile() && listofFiles[i].getName().endsWith(".jpg")){
                 try {
                     //System.out.println(listofFiles[i].getName()); //print filenames for debug purpose
-                    addPicture(path+listofFiles[i].getName());
+                    add_picture(path+listofFiles[i].getName());
                     System.out.println(i + ": added <" + listofFiles[i].getName() + "> to database"); //print filenames for debug purpose
                 } catch (Exception e) {
                     e.printStackTrace();

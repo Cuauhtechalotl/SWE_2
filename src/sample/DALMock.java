@@ -55,4 +55,14 @@ public class DALMock implements DAL{
     public List<Photographer> load_photographers() {
         return photographers;
     }
+
+    @Override
+    public Picture get_picture(String path) {
+        return null;
+    }
+
+    @Override
+    public void add_picture(String path) {
+
+    }
 }

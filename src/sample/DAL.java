@@ -19,4 +19,8 @@ public interface DAL {
     void edit_picture(Picture picture) throws SQLException;
 
     List<Photographer> load_photographers();
+
+    Picture get_picture(String path);
+
+    void add_picture(String path);
 }
