@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class Database{
+class DALDatabase implements DAL{
 
 //    private String pathToPictures=/home/ego/IdeaProjects/SWE_2SWE_2/resources/bilder/
 //    private String dbURL=jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin
@@ -20,19 +20,19 @@ class Database{
 //    private String user=root
 
 
-    private static Database firstInstance = null;
+    private static DALDatabase firstInstance = null;
 
-    private Database() {}   //constructor has to be empty -> singleton, load data after init
+    public DALDatabase() {}   //constructor has to be empty -> singleton, load data after init
 
-    public static Database getInstance() throws InterruptedException {
+    public static DALDatabase getInstance() throws InterruptedException {
 
         if(firstInstance == null) {
-            synchronized (Database.class) {
+            synchronized (DALDatabase.class) {
                 if (firstInstance == null) {
 
                     // If the instance isn't needed it isn't created
                     // This is known as lazy instantiation
-                    firstInstance = new Database();
+                    firstInstance = new DALDatabase();
 
                 }
             }
@@ -131,10 +131,16 @@ class Database{
         return columns;
     }
 
-    public ResultSet execute(String query) throws SQLException {
+    public ResultSet execute(String query) {
         Connection db = this.connect();
-        Statement st = db.createStatement();
-        return st.executeQuery(query);
+        Statement st = null;
+        try {
+            st = db.createStatement();
+            return st.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void insert(String query) throws SQLException {
@@ -181,6 +187,26 @@ class Database{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Photographer> load_photographers() {
+        ArrayList<Photographer> photographers = new ArrayList<Photographer>();
+        try {
+            ResultSet rs = execute("SELECT * FROM Fotografen_innen");
+            while (rs.next()) {
+                int id = rs.getInt("Fotografen_ID");
+                String vorname = rs.getString("Vorname");
+                String nachname = rs.getString("Nachname");
+                String geburtstag = rs.getString("Geburtstag");
+                String notizen = rs.getString("Notizen");
+                Photographer photographer = new Photographer(id, vorname, nachname, geburtstag, notizen);
+                photographers.add(photographer);
+                return photographers;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return photographers;
     }
 //    @Override
 //    public void reset() throws SQLException {
@@ -266,9 +292,9 @@ class Database{
         }
     }
 
-    public void edit_picture(Picture picture) throws InterruptedException, SQLException {
-
-        PreparedStatement addPicture = Database.getInstance().connect().prepareStatement("CALL edit_picture(?,?,?,?,?,?,?,?,?,?)");
+    public void edit_picture(Picture picture) throws SQLException {
+        Connection con = connect();
+        PreparedStatement addPicture = con.prepareStatement("CALL edit_picture(?,?,?,?,?,?,?,?,?,?)");
         addPicture.setString(1,picture.getId());
         addPicture.setString(2,picture.getPath());
         addPicture.setString(3,picture.getNotizen());

@@ -21,12 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Scene;
 import models.DataTupel;
-import models.Photographer;
 import models.Picture;
 
 public class Controller {
@@ -71,9 +68,9 @@ public class Controller {
     public void initialize() throws SQLException, FileNotFoundException, InterruptedException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
         System.out.println("FXML initialized");
 
-        Database picdb = null;
+        DALDatabase picdb = null;
         try {
-            picdb = Database.getInstance();
+            picdb = DALDatabase.getInstance();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -321,7 +318,7 @@ public class Controller {
 
     @FXML public void loadData(String path) throws SQLException, InterruptedException {
 
-        Database picdb = Database.getInstance();
+        DALDatabase picdb = DALDatabase.getInstance();
         Picture picture = picdb.getPicture(path);
         pic = picture;
 
@@ -373,3 +370,9 @@ public class Controller {
         BL.getBl().editPicture(pic);
     }
 }
+
+// model ->pm: List<PicturePM> pms = List<Picture>
+//                                  .stream()
+//                                  .map(i -> new PicturePM(i))
+//                                  .collect(Collectors.toList())
+// dann GUI: Liste.setItems(FXCollections.observableArrayList(pms)
