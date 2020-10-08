@@ -7,10 +7,21 @@ public class Photographer {
     String geburtsdatum;
     String notizen;
 
+    public Photographer() {
+
+    }
+
     public String getId()
     {
-        if (id == 0) {String x = ""; return x;};
+        if (id < 1) {return null;};
         return String.valueOf(id);
+    }
+
+    public String getName() {
+        if(nachname == null) {
+            return "";
+        }
+        return vorname+" "+nachname;
     }
 
     public String getVorname()
@@ -58,5 +69,9 @@ public class Photographer {
         nachname = nn;
         geburtsdatum = gd;
         notizen = nt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -12,12 +12,13 @@ public class Picture {
     IPTC iptc;
     String notizen;
 
-    public void loadPicture(int id, String path, String notizen, EXIF exif, IPTC iptc) {
+    public void loadPicture(int id, String path, String notizen, EXIF exif, IPTC iptc, Photographer photographer) {
         this.id = id;
         this.path = path;
         this.notizen = notizen;
         this.exif = exif;
         this.iptc = iptc;
+        this.photographer = photographer;
     }
 
     public void setNotizen(String notizen) {

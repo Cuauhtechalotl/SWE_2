@@ -22,7 +22,7 @@ public class DALMock implements DAL{
         IPTC iptc = new IPTC("Titel","Wien","01.01.2020");
         pictures = new ArrayList<>();
         Picture pic = new Picture();
-        pic.loadPicture(1,"./test.jpg","Notiz",exif,iptc);
+        pic.loadPicture(1,"./test.jpg","Notiz",exif,iptc, photographers.get(0));
         pictures.add(pic);
     }
 

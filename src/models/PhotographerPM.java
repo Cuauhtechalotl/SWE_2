@@ -9,7 +9,9 @@ public class PhotographerPM {
 
     public PhotographerPM(Photographer photographer)
     {
+        if (photographer.getId()!=null) {
         id = Integer.parseInt(photographer.getId());
+        }
         vorname = photographer.getVorname();
         nachname = photographer.getNachname();
         geburtsdatum = photographer.getGeburtsdatum();
@@ -57,4 +59,10 @@ public class PhotographerPM {
         notizen = notes;
     }
 
+    public String setName() {
+        if(getNachname()==null) { return "";}
+        else {
+            return getId()+" "+getVorname()+" "+getNachname();
+        }
+    }
 }

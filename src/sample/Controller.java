@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,10 +24,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javafx.scene.Scene;
-import models.DataTupel;
-import models.Picture;
-import models.PicturePM;
+import javafx.util.StringConverter;
+import models.*;
+
+import javax.swing.*;
 
 public class Controller {
 
@@ -45,6 +49,11 @@ public class Controller {
             preview6
     };
 
+    @FXML ComboBox photographerSelect;
+
+
+
+
     @FXML
     Image previewImage1,previewImage2,previewImage3,previewImage4, previewImage5,previewImage6;
 
@@ -61,11 +70,24 @@ public class Controller {
     private List<PicturePM> pictures;
     private List<String> picturePaths;
     private PicturePM pic;
+    private String photograph;
     private int scrollbarValue = 0;
 
     public ObservableList<DataTupel> exif = null;
     public ObservableList<DataTupel> iptc = null;
 
+    public PhotographerListPM photographers;
+    public ObservableList<String> photographersNames;
+
+
+    @FXML public void loadPhotographers() {
+        List<Photographer> list = BL.getBl().getPhotographers();
+        photographers = new PhotographerListPM(list.stream().map(i -> new PhotographerPM(i)).collect(Collectors.toList()));
+        photographersNames = FXCollections.observableArrayList(photographers.getNames());
+        photographerSelect.setItems(photographersNames);
+
+
+    }
 
     @FXML
     public void initialize() throws SQLException, FileNotFoundException, InterruptedException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
@@ -80,6 +102,7 @@ public class Controller {
         //populating listview
         picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
         handlePreviewCarousel(0);
+        loadPhotographers();
 
 //        for(ImageView view : previewList){
 //            int i = 0;
@@ -297,6 +320,7 @@ public class Controller {
         Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
         picture.setImage(img);
         pic = pictures.get(index);
+        photographerSelect.setValue(new PhotographerPM(pic.getPhotographer()).setName());
         try {
             loadData();
         } catch (SQLException e) {
@@ -379,9 +403,18 @@ public class Controller {
         exifTable.setEditable(true);
     }
 
-    @FXML public void saveNotes(ActionEvent event) {
+    @FXML public void pressSave(ActionEvent event) {
         String note = notes.getText();
         pic.setNotizen(note);
+        String name = (String) photographerSelect.getValue();
+        if (name.length()>0)
+        {
+            String[] string = name.split(" ");
+            if (string[0].length()>0) {
+                pic.getPhotographer().setId(Integer.parseInt(string[0]));
+            }
+        }
         BL.getBl().editPicture(pic.getPicture());
+        cachePhotos(scrollbarValue);
     }
 }

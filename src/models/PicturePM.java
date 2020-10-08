@@ -1,5 +1,7 @@
 package models;
 
+import javafx.beans.property.ObjectProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class PicturePM {
 
     public Picture getPicture() {
         Picture picture = new Picture();
-        picture.loadPicture(id, path, notizen, exif, iptc);
+        picture.loadPicture(id, path, notizen, exif, iptc, photographer);
         return picture;
     }
 
@@ -64,7 +66,7 @@ public class PicturePM {
     }
 
     public Photographer getPhotographer() {
-        return photographer;
+        return photographer == null ? new Photographer() : photographer;
     }
 
     public List<DataTupel> getExifList() {

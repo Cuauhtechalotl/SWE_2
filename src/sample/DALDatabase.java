@@ -189,6 +189,7 @@ class DALDatabase implements DAL{
         }
     }
 
+
     public List<Photographer> load_photographers() {
         List<Photographer> photographers = new ArrayList<Photographer>();
         try {
@@ -265,10 +266,21 @@ class DALDatabase implements DAL{
             String ueberschrift = rs.getString("Ueberschrift");
             String ort = rs.getString("Ort");
             String datum = rs.getString("Datum");
-            int photograph = rs.getInt("Fotografen_ID");
+            int photographerId = rs.getInt("Fotografen_ID");
             EXIF exif = new EXIF(iso, blende, belichtung);
             IPTC iptc = new IPTC(ueberschrift, ort, datum);
-            pic.loadPicture(id, path, notizen, exif, iptc);
+            Photographer photographer = new Photographer();
+            if (photographerId > 0)
+            {
+                ResultSet rs2 = execute("SELECT * FROM Fotografen_innen WHERE Fotografen_ID = " + photographerId + ";");
+                rs2.next();
+                String vorname = rs2.getString("Vorname");
+                String nachname = rs2.getString("Nachname");
+                String geburtsdatum = rs2.getString("Geburtstag");
+                String notizen2 = rs2.getString("Notizen");
+                photographer = new Photographer(photographerId, vorname, nachname, geburtsdatum, notizen);
+            }
+            pic.loadPicture(id, path, notizen, exif, iptc, photographer);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -307,7 +319,7 @@ class DALDatabase implements DAL{
         addPicture.setString(7,picture.getIptc().getUeberschrift());
         addPicture.setString(8,picture.getIptc().getOrt());
         addPicture.setString(9,picture.getIptc().getDatum());
-        if(picture.getPhotographer() == null)
+        if(picture.getPhotographer().getId() == null)
         {
             addPicture.setString(10,null);
         }

@@ -86,8 +86,8 @@
                                                             <children>
                                                                 <TextField layoutX="9.0" layoutY="50.0" prefHeight="26.0" prefWidth="229.0" promptText="Text" />
                                                                 <TextField fx:id="notes" layoutX="10.0" layoutY="84.0" prefHeight="478.0" prefWidth="154.0" promptText="Notes" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="84.0" />
-                                                                <Button layoutX="9.0" layoutY="372.0" mnemonicParsing="false" onAction="#saveNotes" prefHeight="26.0" prefWidth="115.0" text="Save" />
-                                                            <ComboBox layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
+                                                                <Button layoutX="9.0" layoutY="372.0" mnemonicParsing="false" onAction="#pressSave" prefHeight="26.0" prefWidth="115.0" text="Save" />
+                                                            <ComboBox fx:id="photographerSelect" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>
