@@ -2,15 +2,16 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Main extends Application {
@@ -20,14 +21,35 @@ public class Main extends Application {
     ListView<String> listView;
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, InterruptedException {
         primaryStage.setTitle("PicDB Manager");
 
+        String separator = System.getProperty("file.separator");
+
+        List<String> configValues = new ArrayList<>(
+                Arrays.asList(
+                        //filepath to pictures folder
+                        System.getProperty("user.dir")+"SWE_2" + separator + "resources" + separator + "bilder" + separator,
+                        //database address
+                        "jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin",
+                        //database driver
+                        "com.mysql.cj.jdbc.Driver",
+                        //username
+                        "picdb user",
+                        //pw
+                        "swe2"
+                ));
+
+        //setup configmanager
+        Configmanager config = Configmanager.getInstance();
+        config.createConfig(configValues);
+
         //setup database connection
-        Database picdb = new Database();
+        DALDatabase picdb = DALDatabase.getInstance();
+        picdb.setProperties();      //loads properties from config
         picdb.connect();
 
-        picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
+        //picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
 
 
         Parent root = null;

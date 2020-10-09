@@ -7,9 +7,21 @@ public class Photographer {
     String geburtsdatum;
     String notizen;
 
-    public int getId()
+    public Photographer() {
+
+    }
+
+    public String getId()
     {
-        return id;
+        if (id < 1) {return null;};
+        return String.valueOf(id);
+    }
+
+    public String getName() {
+        if(nachname == null) {
+            return "";
+        }
+        return vorname+" "+nachname;
     }
 
     public String getVorname()
@@ -32,6 +44,12 @@ public class Photographer {
         return notizen;
     }
 
+    public void setVorname(String input) {vorname = input;}
+
+    public void setNachname(String input) {nachname = input;}
+
+    public void setGeburtsdatum(String input) {geburtsdatum = input;}
+
     public void setNotizen(String notes) {
         notizen = notes;
     }
@@ -51,5 +69,9 @@ public class Photographer {
         nachname = nn;
         geburtsdatum = gd;
         notizen = nt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 # Project exclude paths
 /.idea/
 /out/
-=======
-/.idea/
-/out/
->>>>>>> Stashed changes
+/src/sample/config.txt

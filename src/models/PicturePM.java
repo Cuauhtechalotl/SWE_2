@@ -1,10 +1,11 @@
 package models;
 
+import javafx.beans.property.ObjectProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Picture {
+public class PicturePM {
     int id;
     String path;
     Photographer photographer;
@@ -12,13 +13,14 @@ public class Picture {
     IPTC iptc;
     String notizen;
 
-    public void loadPicture(int id, String path, String notizen, EXIF exif, IPTC iptc, Photographer photographer) {
-        this.id = id;
-        this.path = path;
-        this.notizen = notizen;
-        this.exif = exif;
-        this.iptc = iptc;
-        this.photographer = photographer;
+    public PicturePM(Picture picture) {
+        id = Integer.parseInt(picture.getId());
+        path = picture.getPath();
+        photographer = picture.getPhotographer();
+        exif = picture.getExif();
+        iptc = picture.getIptc();
+        notizen = picture.getNotizen();
+
     }
 
     public void setNotizen(String notizen) {
@@ -35,6 +37,12 @@ public class Picture {
 
     public void setPhotographer(Photographer photographer) {
         this.photographer = photographer;
+    }
+
+    public Picture getPicture() {
+        Picture picture = new Picture();
+        picture.loadPicture(id, path, notizen, exif, iptc, photographer);
+        return picture;
     }
 
     public String getId() {
@@ -58,7 +66,7 @@ public class Picture {
     }
 
     public Photographer getPhotographer() {
-        return photographer;
+        return photographer == null ? new Photographer() : photographer;
     }
 
     public List<DataTupel> getExifList() {
@@ -77,5 +85,4 @@ public class Picture {
         iptcData.add(new DataTupel("Datum",iptc.getDatum()));
         return iptcData;
     }
-
 }

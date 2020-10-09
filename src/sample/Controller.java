@@ -1,14 +1,18 @@
 package sample;
 
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollBar;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,9 +23,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javafx.scene.Scene;
+import javafx.util.StringConverter;
+import models.*;
+
+import javax.swing.*;
 
 public class Controller {
 
@@ -29,6 +38,8 @@ public class Controller {
     private ImageView picture;
     @FXML
     private ImageView preview1, preview2, preview3, preview4, preview5, preview6;
+
+    @FXML TextField searchField;
 
     @FXML
     ImageView[] previewList = {
@@ -40,8 +51,13 @@ public class Controller {
             preview6
     };
 
+    @FXML ComboBox photographerSelect;
+
+
+
+
     @FXML
-    Image previewImage1,previewImage2,previewImage3,previewImage5,previewImage6;
+    Image previewImage1,previewImage2,previewImage3,previewImage4, previewImage5,previewImage6;
 
     @FXML
     private ScrollBar scrollbar;
@@ -54,18 +70,42 @@ public class Controller {
     private ListView<String> listViewIPTC;
 
     private List<String> picturePaths;
+    private PicturePM pic;
+    private String photograph;
     private int scrollbarValue = 0;
+    private SearchPM search;
 
+    public ObservableList<DataTupel> exif = null;
+    public ObservableList<DataTupel> iptc = null;
+
+    public PhotographerListPM photographers;
+    public ObservableList<String> photographersNames;
+
+
+    @FXML public void loadPhotographers() {
+        List<Photographer> list = BL.getBl().getPhotographers();
+        photographers = new PhotographerListPM(list.stream().map(i -> new PhotographerPM(i)).collect(Collectors.toList()));
+        photographersNames = FXCollections.observableArrayList(photographers.getNames());
+        photographerSelect.setItems(photographersNames);
+
+
+    }
 
     @FXML
-    public void initialize() throws SQLException, FileNotFoundException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
+    public void initialize() throws SQLException, FileNotFoundException, InterruptedException {  //contructor is called first then any @FXML, constructor doesnt have acces to any .fxml components, initialize() does.
         System.out.println("FXML initialized");
 
-        Database picdb = new Database();
+        DALDatabase picdb = null;
+        try {
+            picdb = DALDatabase.getInstance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //populating listview
-        picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
-
+        picturePaths = BL.getBl().searchPictures("");       //load db here
         handlePreviewCarousel(0);
+        loadPhotographers();
+        search = new SearchPM();
 
 //        for(ImageView view : previewList){
 //            int i = 0;
@@ -252,29 +292,42 @@ public class Controller {
     private void handlePreviewCarousel(int index) throws FileNotFoundException {
 
 //        System.out.println("previewCarousel index " + index);
-        Image img1 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(0+index).substring(1)));
-        Image img2 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(1+index).substring(1)));
-        Image img3 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(2+index).substring(1)));
-        Image img4 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(3+index).substring(1)));
-        Image img5 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(4+index).substring(1)));
-        Image img6 = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(5+index).substring(1)));
+        Image[] images = new Image[6];
+        for(int i=0;i<=5;i++) {
+            images[i] = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(i+index).substring(1)));
+        }
+        preview1.setImage(images[0]);
+        preview2.setImage(images[1]);
+        preview3.setImage(images[2]);
+        preview4.setImage(images[3]);
+        preview5.setImage(images[4]);
+        preview6.setImage(images[5]);
+
+
 //        System.out.println("firstindex:" + 1+index);
 //        System.out.println("lastindex:" + index+5);
-        preview1.setImage(img1);
-        preview2.setImage(img2);
-        preview3.setImage(img3);
-        preview4.setImage(img4);
-        preview5.setImage(img5);
-        preview6.setImage(img6);
+    }
 
+    private void cachePhotos(int index) {
+        String path = picturePaths.get(index);
+        pic = new PicturePM(BL.getBl().getPicture(path));
     }
 
     private void setPreviewImage(int index) throws FileNotFoundException {
 
         Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
         picture.setImage(img);
-
+        cachePhotos(index);
+        photographerSelect.setValue(new PhotographerPM(pic.getPhotographer()).setName());
+        try {
+            loadData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+    }
 
     public void pressButton(ActionEvent event){
 //        Image image = new Image(getClass().getResourceAsStream("file:/home/ego/IdeaProjects/SWE2/resources/bilder/test2.jpg"));
@@ -293,5 +346,86 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML TextField notes;
+
+    @FXML TableView exifTable;
+    @FXML TableView iptcTable;
+    @FXML TableColumn<String,String> eProp;
+    @FXML TableColumn<String,String> eVal;
+    @FXML TableColumn<String,String> iProp;
+    @FXML TableColumn<String,String> iVal;
+
+    @FXML public void loadData() throws SQLException, InterruptedException {
+
+        notes.setText(pic.getNotizen());
+
+        List<DataTupel> exifData = pic.getExifList();
+        exif = FXCollections.observableArrayList(exifData);
+        exifTable.setItems(exif);
+        eProp.setCellValueFactory(new PropertyValueFactory<>("property"));
+        eVal.setCellValueFactory(new PropertyValueFactory<>("value"));
+        exifTable.getColumns().setAll(eProp, eVal);
+
+        List<DataTupel> iptcData = pic.getIptcList();
+        iptc = FXCollections.observableArrayList(iptcData);
+        iptcTable.setItems(iptc);
+        iProp.setCellValueFactory(new PropertyValueFactory<>("property"));
+        iVal.setCellValueFactory(new PropertyValueFactory<>("value"));
+        iptcTable.getColumns().setAll(iProp, iVal);
+
+        eVal.setCellFactory(TextFieldTableCell.forTableColumn());
+        eVal.setOnEditCommit(edited -> {
+            int x = edited.getTablePosition().getRow();
+            switch (x) {
+                case 0 : pic.getExif().setIso(edited.getNewValue()); break;
+                case 1 : pic.getExif().setBlende(edited.getNewValue()); break;
+                case 2 : pic.getExif().setBelichtung(edited.getNewValue()); break;
+            }
+            BL.getBl().editPicture(pic.getPicture());
+            exif.get(x).setValue(edited.getNewValue());});
+
+        iVal.setCellFactory(TextFieldTableCell.forTableColumn());
+        iVal.setOnEditCommit(edited -> {
+            int x = edited.getTablePosition().getRow();
+            switch (x) {
+                case 0 : pic.getIptc().setUeberschrift(edited.getNewValue()); break;
+                case 1 : pic.getIptc().setOrt(edited.getNewValue()); break;
+                case 2 : pic.getIptc().setDatum(edited.getNewValue()); break;
+            }
+            BL.getBl().editPicture(pic.getPicture());
+            iptc.get(x).setValue(edited.getNewValue());});
+
+        iptcTable.setEditable(true);
+        exifTable.setEditable(true);
+    }
+
+    @FXML public void pressSave(ActionEvent event) {
+        String note = notes.getText();
+        pic.setNotizen(note);
+        String name = (String) photographerSelect.getValue();
+        if (name.length()>0)
+        {
+            String[] string = name.split(" ");
+            if (string[0].length()>0) {
+                pic.getPhotographer().setId(Integer.parseInt(string[0]));
+            }
+        }
+        BL.getBl().editPicture(pic.getPicture());
+        cachePhotos(scrollbarValue);
+    }
+
+    @FXML public void search(ActionEvent event) {
+        String searchString = searchField.getText();
+        search.clear();
+        search.addPicPaths(BL.getBl().searchPictures(searchString));
+        picturePaths = search.getPicturePaths();
+        try {
+            handlePreviewCarousel(0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }
