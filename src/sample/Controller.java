@@ -441,7 +441,7 @@ public class Controller {
 
         Report report = new Report();
         try {
-            report.createPdf("results/" + pic.getPath().substring(pic.getPath().lastIndexOf("/"), pic.getPath().lastIndexOf(".")) + ".pdf", pic);
+            report.createPdf("reports/" + pic.getPath().substring(pic.getPath().lastIndexOf("/"), pic.getPath().lastIndexOf(".")) + ".pdf", pic);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
