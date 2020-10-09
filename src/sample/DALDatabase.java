@@ -14,11 +14,11 @@ import java.util.List;
 
 class DALDatabase implements DAL{
 
-//    private String pathToPictures=/home/ego/IdeaProjects/SWE_2SWE_2/resources/bilder/
-//    private String dbURL=jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin
-//    private String dbDriver=com.mysql.cj.jdbc.Driver
-//    private String user=root
-
+    private String pathToPictures;
+    private String dbURL;
+    private String dbDriver;
+    private String user;
+    private String pw;
 
     private static DALDatabase firstInstance = null;
 
@@ -41,42 +41,10 @@ class DALDatabase implements DAL{
         return firstInstance;
     }
 
-//    public database(String url, String name, String timezone, String driver, String username, String password){
-//
-//        String dbcUrl = url;
-//        String dbcName = name;
-//        String dbcTimezone = timezone;
-//        String dbcDriver = driver;
-//        String dbcUsername = username;
-//        String dbcPassword = password;
-//
-//    }
-//
-//    //default(without Args): connects to localhost/mysql
-//    public database(){
-//
-//        String dbcUrl = "jdbc:mysql://localhost:3306/";
-//        String dbcName = "picdb";
-//        String dbcTimezone = "?serverTimezone=Europe/Berlin";
-//        String dbcDriver = "com.mysql.cj.jdbc.Driver";
-//        String dbcUsername = "root";
-//        String dbcPassword = "root";
-//
-//    }
-//List<String> configValues
     public Connection connect() {
 
-//        this.pathToPictures = configValues.get(0);
-//        this.dbURL = configValues.get(1);
-//        this.dbDriver = configValues.get(2);
-//        this.user = configValues.get(3);
-
-
         try {
-            //Connection db = DriverManager.getConnection(url, user, pwd);
-
-            Connection db = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin", "picdb_user", "swe2");
-
+            Connection db = DriverManager.getConnection(dbURL, user, pw);
 
             if (db != null) {
                 System.out.println("Connected to the database!");
@@ -97,8 +65,8 @@ class DALDatabase implements DAL{
 
     public void retrieve() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/picdb?serverTimezone=Europe/Berlin", "root", "root");
+            Class.forName(dbDriver);
+            Connection con = DriverManager.getConnection(dbURL, user, pw);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("select * from Fotografen_innen");
             while(rs.next())
@@ -146,6 +114,11 @@ class DALDatabase implements DAL{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void edit_picture(Picture picture) throws SQLException {
+
     }
 
     public void insert(String query) throws SQLException {
@@ -310,6 +283,19 @@ class DALDatabase implements DAL{
                 }
             }
         }
+    }
+
+    public void setProperties() throws InterruptedException {
+        Configmanager config = Configmanager.getInstance();
+        List<String> properties = config.getConfig();
+        this.pathToPictures = properties.get(0);
+        this.dbURL = properties.get(1);
+        this.dbDriver = properties.get(2);
+        this.user = properties.get(3);
+        this.pw = properties.get(4);
+
+        // path url driver user pw
+
     }
 
     public void edit_picture(Picture picture) throws SQLException {

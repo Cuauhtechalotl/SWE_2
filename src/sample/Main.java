@@ -35,14 +35,18 @@ public class Main extends Application {
                         //database driver
                         "com.mysql.cj.jdbc.Driver",
                         //username
-                        "root"
+                        "picdb user",
+                        //pw
+                        "swe2"
                 ));
 
+        //setup configmanager
         Configmanager config = Configmanager.getInstance();
         config.createConfig(configValues);
 
         //setup database connection
         DALDatabase picdb = DALDatabase.getInstance();
+        picdb.setProperties();      //loads properties from config
         picdb.connect();
 
         //picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
