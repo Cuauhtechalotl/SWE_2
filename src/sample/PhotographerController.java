@@ -34,11 +34,6 @@ public class PhotographerController {
     @FXML TextField birthField;
     @FXML TextField noteField;
 
-// model ->pm: List<PicturePM> pms = List<Picture>
-//                                  .stream()
-//                                  .map(i -> new PicturePM(i))
-//                                  .collect(Collectors.toList())
-// dann GUI: Liste.setItems(FXCollections.observableArrayList(pms)
 
     @FXML public void loadDataHandler(ActionEvent event) {
         loadData();

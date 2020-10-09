@@ -106,29 +106,6 @@ public class Controller {
         loadPhotographers();
         search = new SearchPM();
 
-//        for(ImageView view : previewList){
-//            int i = 0;
-//            //System.out.println(picturePaths.get(i));
-//            //Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(i).substring(1)));
-//            Image img = new Image(new FileInputStream("/home/ego/IdeaProjects/SWE2/resources/bilder/test2.jpg"));
-//
-//
-//            //System.out.println(picturePaths.get(i).substring(1));
-//            //Image img = new Image(new FileInputStream(picturePaths.get(i)));
-//            view.setImage(img);
-//
-//            i++;
-//        }
-
-        //listView1.setItems(FXCollections.observableList(values));
-//        listViewPictures.setItems(FXCollections.observableList(picturePaths));            // oldfxml
-//        listView1.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                System.out.println();
-//            }
-//        });
-
         preview1.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
@@ -241,49 +218,6 @@ public class Controller {
                 }
             }
         });
-
-        Metadata metadata = new Metadata();
-
-//        try {
-//            //                          image to be changed  >> changed image
-//            metadata.removeExifMetadata(image, image2);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ImageReadException e) {
-//            e.printStackTrace();
-//        } catch (ImageWriteException e) {
-//            e.printStackTrace();
-//        }
-
-
-//        URL imageUrl = getClass().getResource("test.jpg");
-//        Image image23 = new Image(imageUrl.toExternalForm());
-//
-//        picture.setImage(image23);
-
-        //        System.out.println(System.getProperty("user.dir"));       //checking from which dir this file is running
-    }
-
-
-    @FXML
-    public void loadMetadata(int index){
-
-        Metadata metadataReader = new Metadata();
-
-        String[] metaTagArray = new String[6];
-        try {
-            metaTagArray = metadataReader.listTags(System.getProperty("user.dir")+picturePaths.get(0+index).substring(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        TODO: read metadata tags into textbox when picture is selected
-        
-//
-//
-//        listViewEXIF.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 0, 3))));
-//
-//        listViewIPTC.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 3, 6))));
-
     }
 
 
@@ -302,9 +236,6 @@ public class Controller {
         preview5.setImage(images[4]);
         preview6.setImage(images[5]);
 
-
-//        System.out.println("firstindex:" + 1+index);
-//        System.out.println("lastindex:" + index+5);
     }
 
     private void cachePhotos(int index) {
