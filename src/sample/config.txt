@@ -1,5 +1,5 @@
 pathToPictures=/home/ego/IdeaProjects/SWE_2SWE_2/sample.resources/bilder/
 dbURL=jdbc:mysql://127.0.0.1:3306/picdb?serverTimezone=Europe/Berlin
 dbDriver=com.mysql.cj.jdbc.Driver
-user=root
-pw=root
+user=picdb_user
+pw=swe2

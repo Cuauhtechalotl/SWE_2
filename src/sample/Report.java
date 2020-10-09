@@ -46,8 +46,9 @@ public class Report {
         //init document
         Document document = new Document(pdfDocument);
 
-        document.add(new Paragraph("Bild Report\n"));
-        document.add(new Paragraph("Fotografen_innen"));
+        document.add(new Paragraph("Bild Report\n\n"));
+        document.add(new Paragraph("Fotograf"));
+        document.add(new Paragraph(foto.getPhotographer().getName()));
 
 
         // Creating an ImageData object

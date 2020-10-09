@@ -248,7 +248,6 @@ public class Controller {
             }
         });
 
-        Metadata metadata = new Metadata();
 
 //        try {
 //            //                          image to be changed  >> changed image
@@ -271,26 +270,13 @@ public class Controller {
     }
 
 
-    @FXML
-    public void loadMetadata(int index){
 
-        Metadata metadataReader = new Metadata();
-
-        String[] metaTagArray = new String[6];
-        try {
-            metaTagArray = metadataReader.listTags(System.getProperty("user.dir")+picturePaths.get(0+index).substring(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        TODO: read metadata tags into textbox when picture is selected
-        
 //
 //
 //        listViewEXIF.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 0, 3))));
 //
 //        listViewIPTC.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 3, 6))));
 
-    }
 
 
     private void handlePreviewCarousel(int index) throws FileNotFoundException {
