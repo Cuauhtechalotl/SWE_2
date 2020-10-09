@@ -1,4 +1,4 @@
-package models;
+package presentationmodels;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -318,4 +318,16 @@ class DALDatabase implements DAL{
         System.out.println(addPicture.toString());
         addPicture.execute();
     }
+
+    public List<String> searchForEntry(String search) throws SQLException {
+        List<String> paths = new ArrayList<>();
+        PreparedStatement ps = connect().prepareStatement("CALL search(?)");
+        ps.setString(1,search);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            paths.add(rs.getString("Dateipfad"));
+        }
+        return paths;
+    }
+
 }

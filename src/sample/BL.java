@@ -1,11 +1,8 @@
 package sample;
 
 import models.Photographer;
-import models.PhotographerPM;
 import models.Picture;
-import models.PicturePM;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +56,18 @@ public class BL {
     }
 
     public List<String> searchPictures(String search) {
+        List<String> results = new ArrayList<>();
         if(search.length()==0) {
             return dal.loadColumn("Bild","Dateipfad");
         }
         else {
-
-            return null;
+            try {
+                return dal.searchForEntry(search);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return results;
     }
 
     public Picture getPicture(String path) {

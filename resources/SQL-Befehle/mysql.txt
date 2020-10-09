@@ -57,3 +57,24 @@ UPDATE Bild
 SET Dateipfad = path, Notizen = notes, ISO = iso, Blende = blende, Belichtungszeit = belichtung, Ueberschrift = ueberschrift, Ort = ort, Datum = datum, Fotografen_ID = fotograf
 WHERE Bild_Id = id;
 END //
+
+DELIMITER //
+CREATE PROCEDURE picdb.search (IN string VARCHAR(255))
+BEGIN
+(SELECT * FROM picdb.bild
+WHERE ISO = string
+UNION SELECT * FROM picdb.bild
+WHERE Blende = string
+UNION SELECT * FROM picdb.bild
+WHERE Belichtungszeit = string
+UNION SELECT * FROM picdb.bild
+WHERE Ueberschrift = string
+UNION SELECT * FROM picdb.bild
+WHERE Ort = string
+UNION SELECT * FROM picdb.bild
+WHERE Datum = string)
+UNION SELECT * FROM bild
+WHERE bild.Fotografen_ID IN (
+	SELECT Fotografen_ID FROM fotografen_innen WHERE Nachname = string
+    UNION SELECT Fotografen_ID FROM fotografen_innen WHERE Vorname = string);
+END //

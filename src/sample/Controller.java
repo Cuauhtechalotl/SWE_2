@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,15 +21,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javafx.scene.Scene;
-import javafx.util.StringConverter;
 import models.*;
-
-import javax.swing.*;
+import presentationmodels.PhotographerListPM;
+import presentationmodels.PhotographerPM;
+import presentationmodels.PicturePM;
+import presentationmodels.SearchPM;
 
 public class Controller {
 
@@ -159,7 +158,6 @@ public class Controller {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
-//                System.out.println(clickedPreviewId);
                 String[] tokens = clickedPreviewId.split(",");
                 try {
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
@@ -292,8 +290,9 @@ public class Controller {
     private void handlePreviewCarousel(int index) throws FileNotFoundException {
 
 //        System.out.println("previewCarousel index " + index);
+
         Image[] images = new Image[6];
-        for(int i=0;i<=5;i++) {
+        for(int i=0;(i<picturePaths.size()) && (i<=5);i++) {
             images[i] = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(i+index).substring(1)));
         }
         preview1.setImage(images[0]);
@@ -317,7 +316,8 @@ public class Controller {
 
         Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
         picture.setImage(img);
-        cachePhotos(index);
+        System.out.println(index+"<index ->path"+picturePaths.size());
+        cachePhotos(index-1);
         photographerSelect.setValue(new PhotographerPM(pic.getPhotographer()).setName());
         try {
             loadData();
@@ -341,7 +341,7 @@ public class Controller {
             Parent layout = FXMLLoader.load(getClass().getResource("photographer.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Photographers");
-            stage.setScene(new Scene(layout, 450, 450));
+            stage.setScene(new Scene(layout, 690, 450));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -421,6 +421,7 @@ public class Controller {
         search.clear();
         search.addPicPaths(BL.getBl().searchPictures(searchString));
         picturePaths = search.getPicturePaths();
+        scrollbarValue = 0;
         try {
             handlePreviewCarousel(0);
         } catch (FileNotFoundException e) {

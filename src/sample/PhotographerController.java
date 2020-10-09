@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.beans.InvalidationListener;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.cell.TextFieldTableCell;
 import models.Photographer;
 import javafx.collections.FXCollections;
@@ -14,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import models.PhotographerPM;
+import presentationmodels.PhotographerPM;
 
 import java.util.*;
 import java.util.stream.Collectors;

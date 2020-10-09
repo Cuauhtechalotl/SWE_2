@@ -1,4 +1,6 @@
-package models;
+package presentationmodels;
+
+import models.Photographer;
 
 public class PhotographerPM {
     int id;

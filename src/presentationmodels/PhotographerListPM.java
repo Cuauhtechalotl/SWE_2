@@ -1,6 +1,4 @@
-package models;
-
-import javafx.scene.control.ListCell;
+package presentationmodels;
 
 import java.util.ArrayList;
 import java.util.List;

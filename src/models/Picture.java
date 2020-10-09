@@ -61,21 +61,4 @@ public class Picture {
         return photographer;
     }
 
-    public List<DataTupel> getExifList() {
-        List<DataTupel> exifData = new ArrayList<>();
-        exifData.add(new DataTupel("ISO",exif.getIso()));
-        exifData.add(new DataTupel("Blende",exif.getBlende()));
-        exifData.add(new DataTupel("Belichtung",exif.getBelichtung()));
-        return exifData;
-    }
-
-
-    public List<DataTupel> getIptcList() {
-        List<DataTupel> iptcData = new ArrayList<>();
-        iptcData.add(new DataTupel("Ueberschrift",iptc.getUeberschrift()));
-        iptcData.add(new DataTupel("Ort",iptc.getOrt()));
-        iptcData.add(new DataTupel("Datum",iptc.getDatum()));
-        return iptcData;
-    }
-
 }

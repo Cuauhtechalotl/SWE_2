@@ -25,4 +25,7 @@ public interface DAL {
     void add_picture(String path);
 
     List<String> loadColumn(String bild, String dateipfad);
+
+    List<String> searchForEntry(String search) throws SQLException;
+
 }

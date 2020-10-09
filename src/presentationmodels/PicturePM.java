@@ -1,6 +1,7 @@
-package models;
+package presentationmodels;
 
 import javafx.beans.property.ObjectProperty;
+import models.*;
 
 import java.util.ArrayList;
 import java.util.List;
