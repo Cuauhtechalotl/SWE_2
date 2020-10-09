@@ -1,11 +1,14 @@
 package sample;
 
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
@@ -15,6 +18,7 @@ import presentationmodels.PicturePM;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
 import java.util.List;
 
 public class Report {
@@ -46,11 +50,27 @@ public class Report {
         document.add(new Paragraph("Fotografen_innen"));
 
 
+        // Creating an ImageData object
+        String imFile = foto.getPath();
+        ImageData data = null;
+        try {
+            data = ImageDataFactory.create(imFile);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        // Creating an Image object
+        Image image = new Image(data);
+
+        // Adding image to the document
+        document.add(image);
+
+
         // Creating a table
         float [] pointColumnWidths = {200F, 200F};
         
 
-    // EXIF HERE 
+        // EXIF HERE
 
         document.add(new Paragraph("EXIF"));
 
