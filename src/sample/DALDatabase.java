@@ -182,6 +182,40 @@ class DALDatabase implements DAL{
         }
         return photographers;
     }
+//    @Override
+//    public void reset() throws SQLException {
+//        //optional change to "C:" + File.seperator + "directory" + File.seperator + ....
+//        Path filePath = Paths.get("./resources/SQL-Befehle/mysql.txt");
+//        Charset charset = StandardCharsets.UTF_8;
+//
+//
+//
+//        try(BufferedReader bufferedReader = Files.newBufferedReader(filePath, charset)){
+//            String line = "";
+//            int value = 0;
+//            while((value = bufferedReader.read()) != -1){
+//                char c = (char) value;
+//                if(c!= ';'){
+//                    line += c;
+//                }else if(c == ';'){
+//                    line += ';';
+//                    insert(line);
+//                    System.out.println(line);
+//                }
+//            }
+//        }catch (IOException ex){
+//            System.out.format("I/O exception: ", ex);
+//        }
+//
+//
+////        try {
+////            Statement st = this.connect().createStatement();
+////            st.executeUpdate(query);
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        }
+//    }
+
 
     public void add_picture(String picturePath){
         try {
