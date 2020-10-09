@@ -58,6 +58,16 @@ public class BL {
         }
     }
 
+    public List<String> searchPictures(String search) {
+        if(search.length()==0) {
+            return dal.loadColumn("Bild","Dateipfad");
+        }
+        else {
+
+            return null;
+        }
+    }
+
     public Picture getPicture(String path) {
         return dal.get_picture(path);
     }

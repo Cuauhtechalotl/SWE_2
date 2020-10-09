@@ -39,6 +39,8 @@ public class Controller {
     @FXML
     private ImageView preview1, preview2, preview3, preview4, preview5, preview6;
 
+    @FXML TextField searchField;
+
     @FXML
     ImageView[] previewList = {
             preview1,
@@ -67,11 +69,11 @@ public class Controller {
     @FXML
     private ListView<String> listViewIPTC;
 
-    private List<PicturePM> pictures;
     private List<String> picturePaths;
     private PicturePM pic;
     private String photograph;
     private int scrollbarValue = 0;
+    private SearchPM search;
 
     public ObservableList<DataTupel> exif = null;
     public ObservableList<DataTupel> iptc = null;
@@ -100,9 +102,10 @@ public class Controller {
             e.printStackTrace();
         }
         //populating listview
-        picturePaths = picdb.loadColumn("Bild","Dateipfad");       //load db here
+        picturePaths = BL.getBl().searchPictures("");       //load db here
         handlePreviewCarousel(0);
         loadPhotographers();
+        search = new SearchPM();
 
 //        for(ImageView view : previewList){
 //            int i = 0;
@@ -300,26 +303,21 @@ public class Controller {
         preview5.setImage(images[4]);
         preview6.setImage(images[5]);
 
-        cachePhotos(index);
 
 //        System.out.println("firstindex:" + 1+index);
 //        System.out.println("lastindex:" + index+5);
     }
 
     private void cachePhotos(int index) {
-        pictures = new ArrayList<>();
-        for(int i=0;i<=6;i++) {
-            String path = "."+picturePaths.get(i + index).substring(1);
-            System.out.println(path);
-            pictures.add(new PicturePM(BL.getBl().getPicture(path)));
-        }
+        String path = picturePaths.get(index);
+        pic = new PicturePM(BL.getBl().getPicture(path));
     }
 
     private void setPreviewImage(int index) throws FileNotFoundException {
 
         Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
         picture.setImage(img);
-        pic = pictures.get(index);
+        cachePhotos(index);
         photographerSelect.setValue(new PhotographerPM(pic.getPhotographer()).setName());
         try {
             loadData();
@@ -416,5 +414,18 @@ public class Controller {
         }
         BL.getBl().editPicture(pic.getPicture());
         cachePhotos(scrollbarValue);
+    }
+
+    @FXML public void search(ActionEvent event) {
+        String searchString = searchField.getText();
+        search.clear();
+        search.addPicPaths(BL.getBl().searchPictures(searchString));
+        picturePaths = search.getPicturePaths();
+        try {
+            handlePreviewCarousel(0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }

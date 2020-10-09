@@ -55,8 +55,8 @@
          <children>
             <AnchorPane prefHeight="40.0" prefWidth="840.0">
                <children>
-                  <TextField layoutX="7.0" layoutY="7.0" prefHeight="26.0" prefWidth="692.0" promptText="Search" />
-                  <Button layoutX="711.0" layoutY="7.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" text="Search" />
+                  <TextField fx:id="searchField" layoutX="7.0" layoutY="7.0" prefHeight="26.0" prefWidth="692.0" promptText="Search" />
+                  <Button layoutX="711.0" layoutY="7.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="115.0" text="Search" />
                </children>
             </AnchorPane>
             <SplitPane dividerPositions="0.8" layoutY="40.0" orientation="VERTICAL" prefHeight="831.0" prefWidth="840.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">

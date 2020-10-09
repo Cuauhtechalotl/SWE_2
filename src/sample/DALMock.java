@@ -65,4 +65,9 @@ public class DALMock implements DAL{
     public void add_picture(String path) {
 
     }
+
+    @Override
+    public List<String> loadColumn(String bild, String dateipfad) {
+        return null;
+    }
 }

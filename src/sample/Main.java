@@ -45,7 +45,7 @@ public class Main extends Application {
         DALDatabase picdb = DALDatabase.getInstance();
         picdb.connect();
 
-        picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
+        //picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
 
 
         Parent root = null;

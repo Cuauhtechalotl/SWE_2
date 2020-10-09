@@ -117,16 +117,21 @@ class DALDatabase implements DAL{
     }
 
 
-    public List<String> loadColumn(String table, String column) throws SQLException {
+    public List<String> loadColumn(String table, String column) {
         List<String> columns = new ArrayList<String>();
 
         Connection con = connect();
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("select "+ column +" from "+ table +";");
-        while(rs.next())
-        {
-            columns.add(rs.getString(column));
+        Statement st = null;
+        try {
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery("select "+ column +" from "+ table +";");
+            while(rs.next())
+            {
+                columns.add(rs.getString(column));
 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return columns;
     }

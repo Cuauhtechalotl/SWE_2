@@ -23,4 +23,6 @@ public interface DAL {
     Picture get_picture(String path);
 
     void add_picture(String path);
+
+    List<String> loadColumn(String bild, String dateipfad);
 }
