@@ -116,10 +116,6 @@ class DALDatabase implements DAL{
         return null;
     }
 
-    @Override
-    public void edit_picture(Picture picture) throws SQLException {
-
-    }
 
     public void insert(String query) throws SQLException {
         try {
