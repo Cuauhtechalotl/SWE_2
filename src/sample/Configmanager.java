@@ -24,9 +24,12 @@ public class Configmanager {
                     //database driver
                     "dbDriver",
                     //username
-                    "user"
+                    "user",
+                    //password
+                    "pw"
             ));
-    private List<String> configValues;
+
+    private List<String> configValues = new ArrayList<>();
 
     private static Configmanager firstInstance = null;
 
@@ -55,18 +58,15 @@ public class Configmanager {
         if(Files.exists(Paths.get(configPath))){
             System.out.println("config file already exists, using existing config file");
 
-            this.configValues = null;       //deleting initial Values
-
             try {
                 FileReader fr = new FileReader(configPath);
                 BufferedReader br = new BufferedReader(fr);
-                StringBuffer sb = new StringBuffer();
                 String line;
                 while((line=br.readLine())!=null) {
 
-                    System.out.println(line);
-                    sb.append(line);
-                    sb.append("\n");
+                    //System.out.println(line);
+
+                    this.configValues.add(line);
 
                     //this.configValues.add(line);     //updating Values from configfile
                     //NOTE: updating configValues in this class, not the function parameter[createConfig(List<String> configValues)]
@@ -74,11 +74,6 @@ public class Configmanager {
 
                 br.close();
 
-//                sb.indexOf('\n');
-
-//                TODO: continue here, put buffer into this.configvalues
-
-                System.out.println(this.configValues);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,9 +90,6 @@ public class Configmanager {
                     //printing one property per line
                     out. println(configProperties.get(i) + "=" + configValues.get(i));
                 }
-
-                System.out.println("config file created");
-
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -106,8 +98,33 @@ public class Configmanager {
         }
     }
 
-    public void getConfig(){
+    public List<String> getConfig (){
+        System.out.println(configValues);
 
+
+        List<String> values = new ArrayList<>();
+
+        for(String x : configValues){
+            values.add(x.substring(x.indexOf("=")+1));  //snipping everything away before the '=', +1 to snip the '=' itself
+        }
+
+        return values;  //values are configValues without the "path=" or "driver="
+    }
+
+    public String getPath(){
+        return this.configValues.get(0);
+    }
+
+    public String getDbUrl(){
+        return this.configValues.get(1);
+    }
+
+    public String getDbDriver(){
+        return this.configValues.get(2);
+    }
+
+    public String getUser(){
+        return this.configValues.get(3);
     }
 }
 

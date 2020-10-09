@@ -37,17 +37,21 @@ public class Main extends Application {
                         //database driver
                         "com.mysql.cj.jdbc.Driver",
                         //username
-                        "root"
+                        "picdb user",
+                        //pw
+                        "swe2"
                 ));
 
+        //setup configmanager
         Configmanager config = Configmanager.getInstance();
         config.createConfig(configValues);
 
         //setup database connection
         Database picdb = Database.getInstance();
+        picdb.setProperties();      //loads properties from config
         picdb.connect();
 
-        picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
+        //picdb.loadPictureFolder("./resources/bilder/");   //only run once to populate db
 
 
         Parent root = null;
