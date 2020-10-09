@@ -1,6 +1,5 @@
 package sample;
 
-
 import models.Photographer;
 import models.Picture;
 import models.EXIF;
@@ -185,7 +184,7 @@ class DALDatabase implements DAL{
 //    @Override
 //    public void reset() throws SQLException {
 //        //optional change to "C:" + File.seperator + "directory" + File.seperator + ....
-//        Path filePath = Paths.get("./resources/SQL-Befehle/mysql.txt");
+//        Path filePath = Paths.get("./main.resources/SQL-Befehle/mysql.txt");
 //        Charset charset = StandardCharsets.UTF_8;
 //
 //
@@ -229,7 +228,7 @@ class DALDatabase implements DAL{
     public Picture get_picture(String paths) {
         Picture pic = new Picture();
         try {
-            ResultSet rs = execute("SELECT * FROM bild WHERE Dateipfad = '" + paths + "';");
+            ResultSet rs = execute("SELECT * FROM Bild WHERE Dateipfad = '" + paths + "';");
             rs.next();
             int id = rs.getInt("Bild_ID");
             String path = rs.getString("Dateipfad");

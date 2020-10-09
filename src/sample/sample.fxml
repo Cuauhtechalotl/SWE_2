@@ -102,7 +102,7 @@
                                                                 <TextField fx:id="notes" layoutX="10.0" layoutY="84.0" prefHeight="478.0" prefWidth="154.0" promptText="Notes" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="84.0" />
                                                                 <Button layoutX="9.0" layoutY="372.0" mnemonicParsing="false" onAction="#pressSave" prefHeight="26.0" prefWidth="115.0" text="Save" />
                                                             <ComboBox fx:id="photographerSelect" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
-                                                            <Button layoutX="147.0" layoutY="372.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Bild-Report" />
+                                                            <Button layoutX="147.0" layoutY="372.0" mnemonicParsing="false" onAction="#reportPicture" prefHeight="26.0" prefWidth="92.0" text="Bild-Report" />
                                                             </children>
                                                         </AnchorPane>
                                                     </content>

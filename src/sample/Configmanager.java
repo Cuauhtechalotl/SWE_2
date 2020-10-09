@@ -1,11 +1,8 @@
 package sample;
 
 import java.io.*;
-import java.nio.CharBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -101,13 +98,11 @@ public class Configmanager {
     public List<String> getConfig (){
         System.out.println(configValues);
 
-
         List<String> values = new ArrayList<>();
 
         for(String x : configValues){
             values.add(x.substring(x.indexOf("=")+1));  //snipping everything away before the '=', +1 to snip the '=' itself
         }
-
         return values;  //values are configValues without the "path=" or "driver="
     }
 

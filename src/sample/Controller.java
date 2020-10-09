@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,15 +22,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javafx.scene.Scene;
+import javafx.util.StringConverter;
 import models.*;
 import presentationmodels.PhotographerListPM;
 import presentationmodels.PhotographerPM;
 import presentationmodels.PicturePM;
 import presentationmodels.SearchPM;
+
+import javax.swing.*;
 
 public class Controller {
 
@@ -38,7 +43,8 @@ public class Controller {
     @FXML
     private ImageView preview1, preview2, preview3, preview4, preview5, preview6;
 
-    @FXML TextField searchField;
+    @FXML
+    TextField searchField;
 
     @FXML
     ImageView[] previewList = {
@@ -50,13 +56,12 @@ public class Controller {
             preview6
     };
 
-    @FXML ComboBox photographerSelect;
-
-
+    @FXML
+    ComboBox photographerSelect;
 
 
     @FXML
-    Image previewImage1,previewImage2,previewImage3,previewImage4, previewImage5,previewImage6;
+    Image previewImage1, previewImage2, previewImage3, previewImage4, previewImage5, previewImage6;
 
     @FXML
     private ScrollBar scrollbar;
@@ -81,7 +86,8 @@ public class Controller {
     public ObservableList<String> photographersNames;
 
 
-    @FXML public void loadPhotographers() {
+    @FXML
+    public void loadPhotographers() {
         List<Photographer> list = BL.getBl().getPhotographers();
         photographers = new PhotographerListPM(list.stream().map(i -> new PhotographerPM(i)).collect(Collectors.toList()));
         photographersNames = FXCollections.observableArrayList(photographers.getNames());
@@ -129,7 +135,7 @@ public class Controller {
 //            }
 //        });
 
-        preview1.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview1.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
 //                System.out.println("you clicked preview one");
@@ -144,8 +150,7 @@ public class Controller {
                     //sets the main picture to the clicked preview picture in the carousel
                     //cutting the substring to get previewID, setting main picture to preview picture
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
-
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
 
 
                     //loadMetadata(tokens[0].substring(20))+scrollbarValue);
@@ -154,20 +159,21 @@ public class Controller {
                 }
             }
         });
-        preview2.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview2.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
+//                System.out.println(clickedPreviewId);
                 String[] tokens = clickedPreviewId.split(",");
                 try {
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-        preview3.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview3.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
@@ -175,13 +181,13 @@ public class Controller {
                 String[] tokens = clickedPreviewId.split(",");
                 try {
 //                    picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-        preview4.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview4.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
@@ -189,13 +195,13 @@ public class Controller {
                 String[] tokens = clickedPreviewId.split(",");
                 try {
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-        preview5.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview5.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
@@ -203,13 +209,13 @@ public class Controller {
                 String[] tokens = clickedPreviewId.split(",");
                 try {
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-        preview6.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        preview6.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String clickedPreviewId = event.getSource().toString();
@@ -217,7 +223,7 @@ public class Controller {
                 String[] tokens = clickedPreviewId.split(",");
                 try {
                     //picture.setImage(handlePreviewCarousel(Integer.parseInt(tokens[0].substring(20))));
-                    setPreviewImage(Integer.parseInt(tokens[0].substring(20))+scrollbarValue);
+                    setPreviewImage(Integer.parseInt(tokens[0].substring(20)) + scrollbarValue);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -228,7 +234,7 @@ public class Controller {
             public void changed(ObservableValue<? extends Number> observableValue, Number old_val, Number new_val) {
 
                 scrollbar.setMin(0);
-                scrollbar.setMax(picturePaths.size()-6);
+                scrollbar.setMax(picturePaths.size() - 6);
                 scrollbar.setLayoutX(new_val.intValue());
 
 //                System.out.println("scrollbar value " + scrollbar.getLayoutX());
@@ -236,13 +242,11 @@ public class Controller {
 
                 try {
                     handlePreviewCarousel((int) scrollbar.getLayoutX());
-                } catch (FileNotFoundException e){
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-        Metadata metadata = new Metadata();
 
 //        try {
 //            //                          image to be changed  >> changed image
@@ -265,35 +269,12 @@ public class Controller {
     }
 
 
-    @FXML
-    public void loadMetadata(int index){
-
-        Metadata metadataReader = new Metadata();
-
-        String[] metaTagArray = new String[6];
-        try {
-            metaTagArray = metadataReader.listTags(System.getProperty("user.dir")+picturePaths.get(0+index).substring(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        TODO: read metadata tags into textbox when picture is selected
-        
-//
-//
-//        listViewEXIF.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 0, 3))));
-//
-//        listViewIPTC.setItems(FXCollections.observableList(Arrays.asList(Arrays.copyOfRange(metaTagArray, 3, 6))));
-
-    }
-
-
     private void handlePreviewCarousel(int index) throws FileNotFoundException {
 
 //        System.out.println("previewCarousel index " + index);
-
         Image[] images = new Image[6];
-        for(int i=0;(i<picturePaths.size()) && (i<=5);i++) {
-            images[i] = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(i+index).substring(1)));
+        for (int i = 0; i <= 5; i++) {
+            images[i] = new Image(new FileInputStream(System.getProperty("user.dir") + picturePaths.get(i + index).substring(1)));
         }
         preview1.setImage(images[0]);
         preview2.setImage(images[1]);
@@ -314,10 +295,9 @@ public class Controller {
 
     private void setPreviewImage(int index) throws FileNotFoundException {
 
-        Image img = new Image(new FileInputStream(System.getProperty("user.dir")+picturePaths.get(index-1).substring(1)));
+        Image img = new Image(new FileInputStream(System.getProperty("user.dir") + picturePaths.get(index - 1).substring(1)));
         picture.setImage(img);
-        System.out.println(index+"<index ->path"+picturePaths.size());
-        cachePhotos(index-1);
+        cachePhotos(index);
         photographerSelect.setValue(new PhotographerPM(pic.getPhotographer()).setName());
         try {
             loadData();
@@ -329,35 +309,44 @@ public class Controller {
 
     }
 
-    public void pressButton(ActionEvent event){
+    public void pressButton(ActionEvent event) {
 //        Image image = new Image(getClass().getResourceAsStream("file:/home/ego/IdeaProjects/SWE2/resources/bilder/test2.jpg"));
 //        picture.setImage(image);
         picture.setImage(new Image("file:/home/ego/IdeaProjects/SWE2/resources/bilder/test2.jpg"));
         System.out.println("changed pic");
     }
 
-    @FXML public void showPhotographers(ActionEvent event) {
+    @FXML
+    public void showPhotographers(ActionEvent event) {
         try {
             Parent layout = FXMLLoader.load(getClass().getResource("photographer.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Photographers");
-            stage.setScene(new Scene(layout, 690, 450));
+            stage.setScene(new Scene(layout, 450, 450));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @FXML TextField notes;
+    @FXML
+    TextField notes;
 
-    @FXML TableView exifTable;
-    @FXML TableView iptcTable;
-    @FXML TableColumn<String,String> eProp;
-    @FXML TableColumn<String,String> eVal;
-    @FXML TableColumn<String,String> iProp;
-    @FXML TableColumn<String,String> iVal;
+    @FXML
+    TableView exifTable;
+    @FXML
+    TableView iptcTable;
+    @FXML
+    TableColumn<String, String> eProp;
+    @FXML
+    TableColumn<String, String> eVal;
+    @FXML
+    TableColumn<String, String> iProp;
+    @FXML
+    TableColumn<String, String> iVal;
 
-    @FXML public void loadData() throws SQLException, InterruptedException {
+    @FXML
+    public void loadData() throws SQLException, InterruptedException {
 
         notes.setText(pic.getNotizen());
 
@@ -379,36 +368,50 @@ public class Controller {
         eVal.setOnEditCommit(edited -> {
             int x = edited.getTablePosition().getRow();
             switch (x) {
-                case 0 : pic.getExif().setIso(edited.getNewValue()); break;
-                case 1 : pic.getExif().setBlende(edited.getNewValue()); break;
-                case 2 : pic.getExif().setBelichtung(edited.getNewValue()); break;
+                case 0:
+                    pic.getExif().setIso(edited.getNewValue());
+                    break;
+                case 1:
+                    pic.getExif().setBlende(edited.getNewValue());
+                    break;
+                case 2:
+                    pic.getExif().setBelichtung(edited.getNewValue());
+                    break;
             }
             BL.getBl().editPicture(pic.getPicture());
-            exif.get(x).setValue(edited.getNewValue());});
+            exif.get(x).setValue(edited.getNewValue());
+        });
 
         iVal.setCellFactory(TextFieldTableCell.forTableColumn());
         iVal.setOnEditCommit(edited -> {
             int x = edited.getTablePosition().getRow();
             switch (x) {
-                case 0 : pic.getIptc().setUeberschrift(edited.getNewValue()); break;
-                case 1 : pic.getIptc().setOrt(edited.getNewValue()); break;
-                case 2 : pic.getIptc().setDatum(edited.getNewValue()); break;
+                case 0:
+                    pic.getIptc().setUeberschrift(edited.getNewValue());
+                    break;
+                case 1:
+                    pic.getIptc().setOrt(edited.getNewValue());
+                    break;
+                case 2:
+                    pic.getIptc().setDatum(edited.getNewValue());
+                    break;
             }
             BL.getBl().editPicture(pic.getPicture());
-            iptc.get(x).setValue(edited.getNewValue());});
+            iptc.get(x).setValue(edited.getNewValue());
+        });
 
         iptcTable.setEditable(true);
         exifTable.setEditable(true);
     }
 
-    @FXML public void pressSave(ActionEvent event) {
+    @FXML
+    public void pressSave(ActionEvent event) {
         String note = notes.getText();
         pic.setNotizen(note);
         String name = (String) photographerSelect.getValue();
-        if (name.length()>0)
-        {
+        if (name.length() > 0) {
             String[] string = name.split(" ");
-            if (string[0].length()>0) {
+            if (string[0].length() > 0) {
                 pic.getPhotographer().setId(Integer.parseInt(string[0]));
             }
         }
@@ -416,14 +419,26 @@ public class Controller {
         cachePhotos(scrollbarValue);
     }
 
-    @FXML public void search(ActionEvent event) {
+    @FXML
+    public void search(ActionEvent event) {
         String searchString = searchField.getText();
         search.clear();
         search.addPicPaths(BL.getBl().searchPictures(searchString));
         picturePaths = search.getPicturePaths();
-        scrollbarValue = 0;
         try {
             handlePreviewCarousel(0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void reportPicture(ActionEvent event) {
+
+        Report report = new Report();
+        try {
+            report.createPdf("results/" + pic.getPath().substring(pic.getPath().lastIndexOf("/"), pic.getPath().lastIndexOf(".")) + ".pdf", pic);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
